@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Consumer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ConsumerController extends Controller
 {
@@ -15,7 +17,7 @@ class ConsumerController extends Controller
      */
     public function index()
     {
-        //
+        return response(Consumer::all()->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**
@@ -26,7 +28,21 @@ class ConsumerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Consumer::getValidator($request->all());
+
+        if ($validator->fails()) {
+                return response()->json([
+                    'result' => false,
+                    'request' => $request->all(),
+                    'errors' => $validator->messages(),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $consumer = new Consumer();
+        $consumer->fill($request->all());
+        $consumer->save();
+
+        return response($consumer->jsonSerialize(), Response::HTTP_CREATED);
     }
 
     /**
@@ -35,21 +51,52 @@ class ConsumerController extends Controller
      * @param  \App\Models\Consumer  $consumer
      * @return \Illuminate\Http\Response
      */
-    public function show(Consumer $consumer)
+    public function show(Request $request, $id)
     {
-        //
+        try {
+            $consumer = Consumer::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'result' => false,
+                'error' => 'Consumer not found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return response($consumer->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Consumer  $consumer
+     * @param  Mixed $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Consumer $consumer)
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Consumer::getValidator($request->all());
+
+        if ($validator->fails()) {
+                return response()->json([
+                    'result' => false,
+                    'request' => $request->all(),
+                    'errors' => $validator->messages(),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        try {
+            $consumer = Consumer::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'result' => false,
+                'error' => 'Consumer not found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $consumer->fill($request->all());
+        $consumer->save();
+
+        return response($consumer->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**
@@ -58,8 +105,22 @@ class ConsumerController extends Controller
      * @param  \App\Models\Consumer  $consumer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Consumer $consumer)
+    public function destroy(Request $request, $id)
     {
-        //
+        try {
+            $consumer = Consumer::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'result' => false,
+                'error' => 'Consumer not found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $consumer->delete();
+
+        return response()->json([
+            'result' => true,
+            'message' => 'Consumer ' . $id . ' successfuly deleted',
+        ], Response::HTTP_OK);
     }
 }
