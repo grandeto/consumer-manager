@@ -6,7 +6,6 @@ use App\Models\Consumer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ConsumerController extends Controller
 {
@@ -17,7 +16,16 @@ class ConsumerController extends Controller
      */
     public function index()
     {
-        return response(Consumer::all()->jsonSerialize(), Response::HTTP_OK);
+        try {
+            $consumers = Consumer::all();
+        } catch (\Exception $err) {
+            return response()->json([
+                'result' => false,
+                'errors' => 'Consumers not fetched',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return response($consumers->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**
@@ -40,7 +48,16 @@ class ConsumerController extends Controller
 
         $consumer = new Consumer();
         $consumer->fill($request->all());
-        $consumer->save();
+
+        try {
+            $consumer->save();
+        } catch (\Exception $err) {
+            return response()->json([
+                'result' => false,
+                'request' => $request->all(),
+                'errors' => 'Consumer not saved',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return response($consumer->jsonSerialize(), Response::HTTP_CREATED);
     }
@@ -54,12 +71,18 @@ class ConsumerController extends Controller
     public function show(Request $request, $id)
     {
         try {
-            $consumer = Consumer::findOrFail($id);
-        } catch (ModelNotFoundException $e) {
+            $consumer = Consumer::find($id);
+            if (empty($consumer)) {
+                return response()->json([
+                    'result' => false,
+                    'error' => 'Consumer not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
                 'error' => 'Consumer not found',
-            ], Response::HTTP_NOT_FOUND);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response($consumer->jsonSerialize(), Response::HTTP_OK);
@@ -85,16 +108,30 @@ class ConsumerController extends Controller
         }
 
         try {
-            $consumer = Consumer::findOrFail($id);
-        } catch (ModelNotFoundException $e) {
+            $consumer = Consumer::find($id);
+            if (empty($consumer)) {
+                return response()->json([
+                    'result' => false,
+                    'error' => 'Consumer not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'error' => 'Consumer not found',
-            ], Response::HTTP_NOT_FOUND);
+                'error' => 'Consumer not updated',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $consumer->fill($request->all());
-        $consumer->save();
+        try {
+            $consumer->save();
+        } catch (\Exception $err) {
+            return response()->json([
+                'result' => false,
+                'request' => $request->all(),
+                'errors' => 'Consumer not updated',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return response($consumer->jsonSerialize(), Response::HTTP_OK);
     }
@@ -108,15 +145,29 @@ class ConsumerController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $consumer = Consumer::findOrFail($id);
-        } catch (ModelNotFoundException $e) {
+            $consumer = Consumer::find($id);
+            if (empty($consumer)) {
+                return response()->json([
+                    'result' => false,
+                    'error' => 'Consumer not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
                 'error' => 'Consumer not found',
-            ], Response::HTTP_NOT_FOUND);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $consumer->delete();
+        try {
+            $consumer->delete();
+        } catch (\Exception $err) {
+            return response()->json([
+                'result' => false,
+                'request' => $request->all(),
+                'errors' => 'Consumer not deleted',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return response()->json([
             'result' => true,
