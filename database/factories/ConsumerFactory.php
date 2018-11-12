@@ -1,6 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
+use App\Models\Consumer;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,6 @@ $factory->define(App\Models\Consumer::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'age' => $faker->numberBetween($min = 14, $max = 99),
-        'city' => $faker->randomElement($array = array ('Sofia','Plovdiv','Varna')),
+        'city' => $faker->randomElement(Consumer::getAllowedCities()),
     ];
 });
