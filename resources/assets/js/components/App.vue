@@ -155,7 +155,7 @@
                     this.$message({
                         showClose: true,
                         dangerouslyUseHTMLString: true,
-                        message: this.handleErrorMessages(error.response.data.errors),
+                        message: this.handleErrorMessages(error),
                         type: 'error',
                         duration: 5000
                     });
@@ -174,7 +174,7 @@
                     this.$message({
                         showClose: true,
                         dangerouslyUseHTMLString: true,
-                        message: this.handleErrorMessages(error.response.data.errors),
+                        message: this.handleErrorMessages(error),
                         type: 'error',
                         duration: 5000
                     });
@@ -183,18 +183,18 @@
             },
             update(id, consumer) {
                 this.muteActions = true;
-                window.axios.put(`/api/consumers/${id}`, consumer).then(() => {
-                    let editedConsumer = this.consumers.find(consumer => consumer.id === id);
-                    editedConsumer.name = consumer.name;
-                    editedConsumer.age = consumer.age;
-                    editedConsumer.city = consumer.city.charAt(0).toUpperCase() + consumer.city.toLowerCase().slice(1);
+                window.axios.put(`/api/consumers/${id}`, consumer).then(({ data }) => {
+                    let editedConsumer = this.consumers.find(cons => cons.id === id);
+                    editedConsumer.name = data.name;
+                    editedConsumer.age = data.age;
+                    editedConsumer.city = data.city;
                     this.editedConsumerProp = {};
                     this.muteActions = false;
                 }).catch(error => {
                     this.$message({
                         showClose: true,
                         dangerouslyUseHTMLString: true,
-                        message: this.handleErrorMessages(error.response.data.errors),
+                        message: this.handleErrorMessages(error),
                         type: 'error',
                         duration: 5000
                     });
@@ -218,7 +218,7 @@
                     this.$message({
                         showClose: true,
                         dangerouslyUseHTMLString: true,
-                        message: this.handleErrorMessages(error.response.data.errors),
+                        message: this.handleErrorMessages(error),
                         type: 'error',
                         duration: 5000
                     });
@@ -282,15 +282,21 @@
                     this.editedConsumerProp = {};
                 }
             },
-            handleErrorMessages(errors) {
-                if (typeof(errors) === "string") {
-                    return errors;
-                } else {
-                    let ul = '<ul>';
-                    for (let i in errors) {
-                        ul+= '<li>' + errors[i][0] + '</li>';
+            handleErrorMessages(error) {
+                if (error.response !== undefined) {
+                    let errors = error.response.data.errors;
+                    if (typeof(errors) === "string") {
+                        return errors;
+                    } else {
+                        let ul = '<ul>';
+                        for (let i in errors) {
+                            ul+= '<li>' + errors[i][0] + '</li>';
+                        }
+                        return ul+= '</ul>';
                     }
-                    return ul+= '</ul>';
+                } else {
+                    console.log('error:', error);
+                    return 'An error occurred! Please try again later';
                 }
             }
         },
