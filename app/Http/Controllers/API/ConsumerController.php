@@ -21,7 +21,7 @@ class ConsumerController extends Controller
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'errors' => 'Consumers not fetched',
+                'errors' => 'Consumers not fetched. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -36,8 +36,10 @@ class ConsumerController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Consumer::getValidator($request->all());
+        $data = $request->all();
+        $data = Self::normalizeCity($data, "city");
 
+        $validator = Consumer::getValidator($data);
         if ($validator->fails()) {
                 return response()->json([
                     'result' => false,
@@ -47,15 +49,15 @@ class ConsumerController extends Controller
         }
 
         $consumer = new Consumer();
-        $consumer->fill($request->all());
+        $consumer->fill($data);
 
         try {
             $consumer->save();
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'request' => $request->all(),
-                'errors' => 'Consumer not saved',
+                'request' => $data,
+                'errors' => 'Consumer not saved. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -65,7 +67,8 @@ class ConsumerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Consumer  $consumer
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Mixed $id
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, $id)
@@ -75,13 +78,13 @@ class ConsumerController extends Controller
             if (empty($consumer)) {
                 return response()->json([
                     'result' => false,
-                    'error' => 'Consumer not found',
+                    'errors' => 'Consumer not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'error' => 'Consumer not found',
+                'errors' => 'Consumer not found. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -97,8 +100,10 @@ class ConsumerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Consumer::getValidator($request->all());
+        $data = $request->all();
+        $data = Self::normalizeCity($data, "city");
 
+        $validator = Consumer::getValidator($data, $request->method());
         if ($validator->fails()) {
                 return response()->json([
                     'result' => false,
@@ -112,24 +117,25 @@ class ConsumerController extends Controller
             if (empty($consumer)) {
                 return response()->json([
                     'result' => false,
-                    'error' => 'Consumer not found',
+                    'errors' => 'Consumer not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'error' => 'Consumer not updated',
+                'errors' => 'Consumer not updated. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $consumer->fill($request->all());
+        $consumer->fill($data);
+
         try {
             $consumer->save();
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'request' => $request->all(),
-                'errors' => 'Consumer not updated',
+                'request' => $data,
+                'errors' => 'Consumer not updated. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -139,7 +145,8 @@ class ConsumerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Consumer  $consumer
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Mixed $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)
@@ -149,13 +156,13 @@ class ConsumerController extends Controller
             if (empty($consumer)) {
                 return response()->json([
                     'result' => false,
-                    'error' => 'Consumer not found',
+                    'errors' => 'Consumer not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'error' => 'Consumer not found',
+                'errors' => 'Consumer not deleted. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -165,7 +172,7 @@ class ConsumerController extends Controller
             return response()->json([
                 'result' => false,
                 'request' => $request->all(),
-                'errors' => 'Consumer not deleted',
+                'errors' => 'Consumer not deleted. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -173,5 +180,22 @@ class ConsumerController extends Controller
             'result' => true,
             'message' => 'Consumer ' . $id . ' successfuly deleted',
         ], Response::HTTP_OK);
+    }
+
+    /**
+     * Normalize name property
+     *
+     * @param  Array  $arr
+     * @param  String $key
+     * @return Array
+     */
+    private function normalizeCity($arr, $key)
+    {
+        if (!empty($arr[$key]) && is_string($arr[$key])) {
+            $arr[$key] = strtolower($arr[$key]);
+            $arr[$key]= ucfirst($arr[$key]);
+        }
+
+        return $arr;
     }
 }

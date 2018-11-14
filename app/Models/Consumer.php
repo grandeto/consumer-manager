@@ -52,12 +52,25 @@ class Consumer extends Model
                     'required',
                     'string',
                     Rule::in(Self::getAllowedCities()),
-                ]
+                ],
             ],
+            'PUT' => [
+                'name' => 'required_without_all:age,city|string|min:4|max:40',
+                'age' => 'required_without_all:name,city|numeric|min:14|max:99',
+                'city' => [
+                    'required_without_all:name,age',
+                    'string',
+                    Rule::in(Self::getAllowedCities()),
+                ],
+            ],
+        ];
+
+        $messages = [
+            'city.in' => 'The selected city is invalid! Please choose between Sofia, Plovdiv and Varna.',
         ];
 
         if (!isset($rules[$rule])) $rule = 'default';
 
-        return Validator::make($data, $rules[$rule]);
+        return Validator::make($data, $rules[$rule], $messages);
     }
 }
