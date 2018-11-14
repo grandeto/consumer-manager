@@ -7,7 +7,20 @@
 
 require('./bootstrap');
 
+import { Table, TableColumn, Row, Col, Input, Select, Option, Button, Message } from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
 window.Vue = require('vue');
+
+Vue.use(Table);
+Vue.use(TableColumn);
+Vue.use(Row);
+Vue.use(Col);
+Vue.use(Input);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(Button);
+Vue.prototype.$message = Message;
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -15,8 +28,13 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+import App from './components/App.vue';
+
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    components: {
+        App
+      },
+      render: h => h(App)
 });
