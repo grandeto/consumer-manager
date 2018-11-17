@@ -284,7 +284,7 @@
             },
             handleErrorMessages(error) {
                 if (error.response !== undefined) {
-                    let errors = error.response.data.errors;
+                    let errors = error.response.data.message;
                     if (typeof(errors) === "string") {
                         return errors;
                     } else {

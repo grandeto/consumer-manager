@@ -34,6 +34,10 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
+            throw new \Illuminate\Auth\AuthenticationException('Unauthenticated. Please Log In.', $exception->guards());
+        }
+
         parent::report($exception);
     }
 
