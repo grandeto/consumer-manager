@@ -30,11 +30,12 @@ Vue.prototype.$message = Message;
 
 import App from './components/App.vue';
 
-
-const app = new Vue({
-    el: '#app',
-    components: {
-        App
-      },
-      render: h => h(App)
-});
+if(document.getElementById("consumers")){
+    const app = new Vue({
+        el: '#consumers',
+        components: {
+            App
+          },
+        render: h => h(App)
+    });
+}
