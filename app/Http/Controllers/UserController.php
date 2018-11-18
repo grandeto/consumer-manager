@@ -88,7 +88,7 @@
             return response()->json([
                 'result' => true,
                 'user' => $userData,
-                'message' => 'User \''. $data['name'] . '\' successfuly created.',
+                'message' => 'User \''. $userData['name'] . '\' successfuly created.',
                 'token' => $token,
             ], Response::HTTP_OK);
         }
