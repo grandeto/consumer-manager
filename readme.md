@@ -1,7 +1,12 @@
-## Consumer manager SPA: Laravel 5.6 & Vue 2.5.17 & Element Ui 2.4.9
+# Consumer manager SPA: Laravel 5.6 & Vue 2.5.17 & Element Ui 2.4.9
 
-- **[Simple version without Authentication and Vue Router](https://github.com/grandeto/consumer-manager/tree/consumer-manager-basic)**
-- Upcoming: Extended version with Authentication and Vue Router
+## Introduction
+
+### Master branch is awlays in sync with the latest finished version in the list below
+
+- **[Simple version without Authentication and Routing](https://github.com/grandeto/consumer-manager/tree/consumer-manager-basic)**
+- **[Extended version with Laravel built-in Routing, Web Authentication and Passport API token Authentication](https://github.com/grandeto/consumer-manager/tree/consumer-manager-extended)**
+- Upcoming: Extended Vue Router version
 
 ## Installation
 
@@ -12,5 +17,7 @@
 2. Create DB
 3. Setup .env
 4. ```php artisan migrate:refresh --seed```
-5. ```npm install```
-6. ```npm run dev``` or ```npm run prod```
+5. ```php artisan passport:install``` (for extended versions only)
+6. ```php artisan passport:keys``` (When deploying Passport to your production servers for the first time)
+6. ```npm install```
+7. ```npm run dev``` or ```npm run prod```
