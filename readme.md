@@ -1,4 +1,8 @@
-## Consumer manager SPA: Laravel 5.6 & Vue 2.5.17 & Element Ui 2.4.9
+# Consumer manager SPA: Laravel 5.6 & Vue 2.5.17 & Element Ui 2.4.9
+
+## Introduction
+
+### Master branch is awlays in sync with the latest finished version in the list below
 
 - **[Simple version without Authentication and Routing](https://github.com/grandeto/consumer-manager/tree/consumer-manager-basic)**
 - **[Extended version with Laravel built-in Routing, Web Authentication and Passport API token Authentication](https://github.com/grandeto/consumer-manager/tree/consumer-manager-extended)**
