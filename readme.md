@@ -17,5 +17,6 @@
 2. Create DB
 3. Setup .env
 4. ```php artisan migrate:refresh --seed```
-5. ```npm install```
-6. ```npm run dev``` or ```npm run prod```
+5. ```php artisan passport:install``` (for extended versions only)
+6. ```npm install```
+7. ```npm run dev``` or ```npm run prod```
