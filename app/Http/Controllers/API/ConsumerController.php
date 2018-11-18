@@ -188,7 +188,7 @@ class ConsumerController extends Controller
 
         return response()->json([
             'result' => true,
-            'message' => 'Consumer ' . $id . ' successfuly deleted',
+            'message' => 'Consumer ' . $id . ' successfuly deleted.',
         ], Response::HTTP_OK);
     }
 
