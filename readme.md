@@ -18,5 +18,6 @@
 3. Setup .env
 4. ```php artisan migrate:refresh --seed```
 5. ```php artisan passport:install``` (for extended versions only)
+6. ```php artisan passport:keys``` (When deploying Passport to your production servers for the first time)
 6. ```npm install```
 7. ```npm run dev``` or ```npm run prod```
