@@ -17,9 +17,11 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::post('login', 'UserController@login');
-Route::post('register', 'UserController@register');
+Route::middleware(['api.headers'])->group(function () {
+    Route::post('login', 'UserController@login');
+    Route::post('register', 'UserController@register');
+});
 
-Route::group(['middleware' => 'auth:api'], function(){
+Route::middleware(['api.headers', 'auth:api'])->group(function () {
     Route::apiResource('/consumers', 'API\ConsumerController');
 });
