@@ -60,6 +60,8 @@
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     {{ __('Forgot Your Password?') }}
                                 </a>
+                                <p>username: demo@demo.com</p>
+                                <p>password: demo</p>
                             </div>
                         </div>
                     </form>

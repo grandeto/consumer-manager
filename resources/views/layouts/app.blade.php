@@ -42,6 +42,9 @@
                             <a class="nav-link" href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
                         </li>
                         @endguest
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('consumers') }}">{{ __('Consumers') }}</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
