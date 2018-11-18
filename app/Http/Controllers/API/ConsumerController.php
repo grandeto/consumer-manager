@@ -10,6 +10,16 @@ use App\Http\Controllers\Controller;
 class ConsumerController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //$this->middleware('auth:api');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -21,7 +31,7 @@ class ConsumerController extends Controller
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'errors' => 'Consumers not fetched. Please try again later.',
+                'message' => 'Consumers not fetched. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -44,7 +54,7 @@ class ConsumerController extends Controller
                 return response()->json([
                     'result' => false,
                     'request' => $request->all(),
-                    'errors' => $validator->messages(),
+                    'message' => $validator->messages(),
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -57,7 +67,7 @@ class ConsumerController extends Controller
             return response()->json([
                 'result' => false,
                 'request' => $data,
-                'errors' => 'Consumer not saved. Please try again later.',
+                'message' => 'Consumer not saved. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -78,13 +88,13 @@ class ConsumerController extends Controller
             if (empty($consumer)) {
                 return response()->json([
                     'result' => false,
-                    'errors' => 'Consumer not found',
+                    'message' => 'Consumer not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'errors' => 'Consumer not found. Please try again later.',
+                'message' => 'Consumer not found. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -108,7 +118,7 @@ class ConsumerController extends Controller
                 return response()->json([
                     'result' => false,
                     'request' => $request->all(),
-                    'errors' => $validator->messages(),
+                    'message' => $validator->messages(),
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -117,13 +127,13 @@ class ConsumerController extends Controller
             if (empty($consumer)) {
                 return response()->json([
                     'result' => false,
-                    'errors' => 'Consumer not found',
+                    'message' => 'Consumer not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'errors' => 'Consumer not updated. Please try again later.',
+                'message' => 'Consumer not updated. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -135,7 +145,7 @@ class ConsumerController extends Controller
             return response()->json([
                 'result' => false,
                 'request' => $data,
-                'errors' => 'Consumer not updated. Please try again later.',
+                'message' => 'Consumer not updated. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -156,13 +166,13 @@ class ConsumerController extends Controller
             if (empty($consumer)) {
                 return response()->json([
                     'result' => false,
-                    'errors' => 'Consumer not found',
+                    'message' => 'Consumer not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch (\Exception $err) {
             return response()->json([
                 'result' => false,
-                'errors' => 'Consumer not deleted. Please try again later.',
+                'message' => 'Consumer not deleted. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -172,7 +182,7 @@ class ConsumerController extends Controller
             return response()->json([
                 'result' => false,
                 'request' => $request->all(),
-                'errors' => 'Consumer not deleted. Please try again later.',
+                'message' => 'Consumer not deleted. Please try again later.',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

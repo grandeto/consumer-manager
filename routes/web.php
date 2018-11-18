@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('consumers.index');
+Auth::routes();
+
+Route::get('/', 'HomeController@index')->name('welcome');
+Route::get('/about', 'HomeController@about')->name('about');
+
+Route::group(['middleware' => 'auth'], function(){
+    Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
+    Route::get('/consumers', 'HomeController@consumers')->name('consumers');
 });
+
